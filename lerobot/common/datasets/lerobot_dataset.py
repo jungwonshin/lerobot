@@ -106,7 +106,7 @@ class LeRobotDatasetMetadata:
     def load_metadata(self):
         self.info = load_info(self.root)
         check_version_compatibility(self.repo_id, self._version, CODEBASE_VERSION)
-        check_version_compatibility(self.repo_id, self._subversion, TROSSEN_SUBVERSION, is_subversion=True)
+        # check_version_compatibility(self.repo_id, self._subversion, TROSSEN_SUBVERSION, is_subversion=True)
         self.tasks, self.task_to_task_index = load_tasks(self.root)
         self.episodes = load_episodes(self.root)
         if self._version < packaging.version.parse("v2.1"):
@@ -135,13 +135,13 @@ class LeRobotDatasetMetadata:
         """Codebase version used to create this dataset."""
         return packaging.version.parse(self.info["codebase_version"])
 
-    @property
-    def _subversion(self) -> packaging.version.Version:
-        """Trossen subversion used to create this dataset."""
-        if "trossen_subversion" not in self.info:
-            raise SubVersionBackwardCompatibilityError(self.repo_id, "v0.0")
-        sub_version = self.info["trossen_subversion"]
-        return packaging.version.parse(sub_version)
+    # @property
+    # def _subversion(self) -> packaging.version.Version:
+    #     """Trossen subversion used to create this dataset."""
+    #     if "trossen_subversion" not in self.info:
+    #         raise SubVersionBackwardCompatibilityError(self.repo_id, "v0.0")
+    #     sub_version = self.info["trossen_subversion"]
+    #     return packaging.version.parse(sub_version)
 
     def get_data_file_path(self, ep_index: int) -> Path:
         ep_chunk = self.get_episode_chunk(ep_index)
@@ -355,7 +355,7 @@ class LeRobotDatasetMetadata:
         obj.tasks, obj.task_to_task_index = {}, {}
         obj.episodes_stats, obj.stats, obj.episodes = {}, {}, {}
         obj.info = create_empty_dataset_info(
-            CODEBASE_VERSION, TROSSEN_SUBVERSION, fps, robot_type, features, use_videos
+            CODEBASE_VERSION, fps, robot_type, features, use_videos
         )
         if len(obj.video_keys) > 0 and not use_videos:
             raise ValueError()
