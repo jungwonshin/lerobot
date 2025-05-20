@@ -22,6 +22,7 @@ from transformers import (
     AutoConfig,
     GemmaForCausalLM,
     PaliGemmaForConditionalGeneration,
+    PaliGemmaModel,
     PretrainedConfig,
     PreTrainedModel,
 )
@@ -174,7 +175,7 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
     def __init__(self, config: PaliGemmaWithExpertConfig):
         super().__init__(config=config)
         self.config = config
-        self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
+        self.paligemma = PaliGemmaModel(config=config.paligemma_config)
         self.gemma_expert = GemmaForCausalLM(config=config.gemma_expert_config)
         # Remove unused embed_tokens
         self.gemma_expert.model.embed_tokens = None

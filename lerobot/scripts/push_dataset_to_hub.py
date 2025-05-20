@@ -27,6 +27,11 @@ def parse_args():
         action="store_true", 
         help="Whether to make the dataset private"
     )
+
+    parser.add_argument(
+        "--branch",
+        type=bool
+    )
     # Removed unused arguments
     return parser.parse_args()
 
