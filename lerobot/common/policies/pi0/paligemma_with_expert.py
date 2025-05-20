@@ -22,7 +22,6 @@ from transformers import (
     AutoConfig,
     GemmaForCausalLM,
     PaliGemmaForConditionalGeneration,
-    PaliGemmaModel,
     PretrainedConfig,
     PreTrainedModel,
 )
@@ -175,7 +174,7 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
     def __init__(self, config: PaliGemmaWithExpertConfig):
         super().__init__(config=config)
         self.config = config
-        self.paligemma = PaliGemmaModel(config=config.paligemma_config)
+        self.paligemma = PaliGemmaForConditionalGeneration(config=config.paligemma_config)
         self.gemma_expert = GemmaForCausalLM(config=config.gemma_expert_config)
         # Remove unused embed_tokens
         self.gemma_expert.model.embed_tokens = None
@@ -217,7 +216,7 @@ class PaliGemmaWithExpertModel(PreTrainedModel):
                 param.data = param.data.to(dtype=torch.bfloat16)
 
     def embed_image(self, image: torch.Tensor):
-        return self.paligemma.get_image_features(image)
+        return self.paligemma.model.get_image_features(image)
 
     def embed_language_tokens(self, tokens: torch.Tensor):
         return self.paligemma.language_model.model.embed_tokens(tokens)
